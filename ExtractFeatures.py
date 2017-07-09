@@ -11,9 +11,10 @@ import os
 
 OUTPUTSIZE = 80
 INPUTFILE = "TP_7deformed_damage_0.tif"
-PATH = os.getcwd() + "/data"
+INPUTPATH = os.getcwd() + "/data"
+OUTPUTPATH = os.getcwd() + "/train"
 
-os.chdir(PATH)
+os.chdir(INPUTPATH)
 
 #
 # Read the input file
@@ -54,6 +55,8 @@ for i in range(len(centroids)):
 #
 
 SEM = scipy.misc.imread(INPUTFILE, flatten=True)
+
+os.chdir(OUTPUTPATH)
 
 for i in range(len(centroids)):
     OUT = str(i) + ".tif"
