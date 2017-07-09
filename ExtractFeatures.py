@@ -35,7 +35,7 @@ for x in range(size_x):
 positions = np.array(pos)
 
 #
-# Find defects and calculate their centroids
+# Find defects and calculate their centroids asdf
 #
 
 dbscan_dataset1 = cluster.DBSCAN(eps=4, min_samples=10, metric='euclidean').fit_predict(positions)
