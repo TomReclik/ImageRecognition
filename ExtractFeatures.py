@@ -30,10 +30,16 @@ else:
 # Create a list of input SEM pictures that haven't been processed yet
 #
 
+if(os.path.isfile("processed.dat")):
+    with open('processed.dat','r') as infile:
+        Processed = infile.read().splitlines()
+else:
+    Processed = []
+
 INPUTSEM = []
 
 for SEM in os.listdir(INPUTPATH):
-    if not SEM in DefectInfo and SEM.endswith(".tif"):
+    if not SEM in Processed:
         INPUTSEM.append(SEM)
 
 #
@@ -41,8 +47,6 @@ for SEM in os.listdir(INPUTPATH):
 #
 
 for INPUTFILE in INPUTSEM:
-
-    DefectInfo[str(INPUTFILE[:-4])] = dict()
 
     #
     # Read the input file
@@ -85,7 +89,7 @@ for INPUTFILE in INPUTSEM:
 
 
     for i in range(len(centroids)):
-        OUT = INPUTFILE[:-4] + str(int(centroids[i][0])) + str(int(centroids[i][1])) + ".tif"
+        OUT = INPUTFILE[:-4] + "_" + str(int(centroids[i][0])) + "_" + str(int(centroids[i][1])) + ".tif"
         xmin = max(int(centroids[i][0]-OUTPUTSIZE/2),0)
         ymin = max(int(centroids[i][1]-OUTPUTSIZE/2),0)
         xmax = min(int(centroids[i][0]+OUTPUTSIZE/2),size_x)
@@ -97,9 +101,16 @@ for INPUTFILE in INPUTSEM:
 
         INFO = {"x": centroids[i][0],
                 "y": centroids[i][1],
+                "OriginalSEM": INPUTFILE,
                 "author": "",
-                "type": ""}
-        DefectInfo[str(INPUTFILE[:-4])][str(i)] = INFO
+                "type": -1}
+        DefectInfo[OUT[:-4]] = INFO
+
+    Processed.append(INPUTFILE)
+
+with open('processed.dat','w') as outfile:
+    for p in Processed:
+        outfile.write(p)
 
 with open('dict.json','w') as outfile:
     json.dump(DefectInfo, outfile)
